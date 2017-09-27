@@ -44,19 +44,38 @@ public class DrugsMod
 		seeds_cannabis = new ItemSeeds(cannabis_scrub, Blocks.farmland).setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("cannabis_seed").setTextureName("drugsmod:seeds_cannabis");
 		dryerActive = new Dryer(true).setBlockName("DryerActive");
 		
-		DMHooks.mainRegistry();
-		proxy.registerTileEntities();
-		GameRegistry.registerItem(cannabis, cannabis.getUnlocalizedName());
-		GameRegistry.registerItem(dry_cannabis, dry_cannabis.getUnlocalizedName());
-		GameRegistry.registerItem(seeds_cannabis, seeds_cannabis.getUnlocalizedName());
+		
+		registerBlocks();
+		registerItems();
+		registerRecipes();
+		registerOthers();	
+	}
+	
+	public void registerBlocks()
+	{
 		GameRegistry.registerBlock(dryer, dryer.getUnlocalizedName());
 		GameRegistry.registerBlock(dryerActive, dryerActive.getUnlocalizedName());
 		GameRegistry.registerBlock(cannabis_scrub, cannabis_scrub.getUnlocalizedName());
+	}
+	public void registerItems()
+	{
+		GameRegistry.registerItem(cannabis, cannabis.getUnlocalizedName());
+		GameRegistry.registerItem(dry_cannabis, dry_cannabis.getUnlocalizedName());
+		GameRegistry.registerItem(seeds_cannabis, seeds_cannabis.getUnlocalizedName());
+	}
+	public void registerRecipes()
+	{
 		GameRegistry.addRecipe(new ItemStack(DrugsMod.dryer, 1), new Object[]{
 				"I#I",
 				"I#I",
 				"III",
 				('I'), Items.iron_ingot, ('#'), Blocks.iron_bars
 		});
+	}
+	public void registerOthers()
+	{
+		DMHooks.mainRegistry();
+		proxy.registerTileEntities();
+
 	}
 }

@@ -11,5 +11,6 @@ public class dry_Cannabis extends Item
 		this.setMaxDamage(64);
 		this.setTextureName("drugsmod:cannabis_dry");
 		this.setCreativeTab(CreativeTabs.tabMaterials);
+		
 	}
 }

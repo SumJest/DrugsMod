@@ -112,7 +112,7 @@ public class Dryer extends Block{
 			
 			if(tedryer != null)
 			{
-				for(int i = 0; i < tedryer.getInventorySize; i++)
+				for(int i = 0; i < tedryer.getSizeInventory(); i++)
 				{
 					ItemStack itemstack = tedryer.getStackInSlot(i);
 					if(itemstack != null)
