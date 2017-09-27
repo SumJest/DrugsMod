@@ -2,13 +2,10 @@ package ru.sumjest.drugsmod.blocks;
 
 import java.util.Random;
 
-import javax.management.modelmbean.ModelMBeanAttributeInfo;
-
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,15 +16,18 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import ru.sumjest.drugsmod.DrugsMod;
+import ru.sumjest.drugsmod.handler.DrugsModGuiHandler;
 import ru.sumjest.drugsmod.tile_entity.TileEntityDryer;
 
-public class Dryer extends Block{
+public class Dryer extends BlockContainer{
 
+	
 	@SideOnly(Side.CLIENT)
 	public IIcon top;
 	@SideOnly(Side.CLIENT)
@@ -159,26 +159,31 @@ public class Dryer extends Block{
 			int direct = world.getBlockMetadata(x, y, z);
 			
 			float xx = (float)x + 0.5F, yy = (float) y + rand.nextFloat() * 6.0F/16.0F, zz = (float) z + 0.5F, xx2 = random.nextFloat() * 0.3F, zz2 = 0.5F;
-			
-			
-			if(direct == 4)
-			{
-				world.spawnParticle("smoke", (double) (xx - zz2), (double) yy, (double) (zz+xx2), 0.0F, 0.0F, 0.0F);
-				world.spawnParticle("flame", (double) (xx - zz2), (double) yy, (double) (zz+xx2), 0.0F, 0.0F, 0.0F);
-			}else if(direct==5)
-			{
-				world.spawnParticle("smoke", (double) (xx - zz2), (double) yy, (double) (zz+xx2), 0.0F, 0.0F, 0.0F);
-				world.spawnParticle("flame", (double) (xx - zz2), (double) yy, (double) (zz+xx2), 0.0F, 0.0F, 0.0F);
-			}else if(direct==3)
-			{
-				world.spawnParticle("smoke", (double) (xx - zz2), (double) yy, (double) (zz+xx2), 0.0F, 0.0F, 0.0F);
-				world.spawnParticle("flame", (double) (xx - zz2), (double) yy, (double) (zz+xx2), 0.0F, 0.0F, 0.0F);
-			}else if(direct==2)
-			{
-				world.spawnParticle("smoke", (double) (xx - zz2), (double) yy, (double) (zz+xx2), 0.0F, 0.0F, 0.0F);
-				world.spawnParticle("flame", (double) (xx - zz2), (double) yy, (double) (zz+xx2), 0.0F, 0.0F, 0.0F);
-			}
-			
+            float f = (float)x + 0.5F;
+            float f1 = (float)y + 0.0F + rand.nextFloat() * 6.0F / 16.0F;
+            float f2 = (float)z + 0.5F;
+            float f3 = 0.52F;
+            float f4 = rand.nextFloat() * 0.6F - 0.3F;
+            if (direct == 4)
+            {
+            	world.spawnParticle("smoke", (double)(f - f3), (double)f1, (double)(f2 + f4), 0.0D, 0.0D, 0.0D);
+            	world.spawnParticle("flame", (double)(f - f3), (double)f1, (double)(f2 + f4), 0.0D, 0.0D, 0.0D);
+            }
+            else if (direct == 5)
+            {
+            	world.spawnParticle("smoke", (double)(f + f3), (double)f1, (double)(f2 + f4), 0.0D, 0.0D, 0.0D);
+            	world.spawnParticle("flame", (double)(f + f3), (double)f1, (double)(f2 + f4), 0.0D, 0.0D, 0.0D);
+            }
+            else if (direct == 2)
+            {
+            	world.spawnParticle("smoke", (double)(f + f4), (double)f1, (double)(f2 - f3), 0.0D, 0.0D, 0.0D);
+            	world.spawnParticle("flame", (double)(f + f4), (double)f1, (double)(f2 - f3), 0.0D, 0.0D, 0.0D);
+            }
+            else if (direct == 3)
+            {
+            	world.spawnParticle("smoke", (double)(f + f4), (double)f1, (double)(f2 + f3), 0.0D, 0.0D, 0.0D);
+            	world.spawnParticle("flame", (double)(f + f4), (double)f1, (double)(f2 + f3), 0.0D, 0.0D, 0.0D);
+            }
 				
 				
 				
@@ -202,11 +207,17 @@ public class Dryer extends Block{
         else return shell; 
 
     }
-	
+	@Override
+	public TileEntity createNewTileEntity(World world, int par2) {
+		return new TileEntityDryer();
+	}
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{
-		player.openGui(DrugsMod.modInstance, 0, world, x, y, z);
-		return true;
+        if (!world.isRemote)
+        {
+            player.openGui(DrugsMod.modInstance, 0, world, x, y, z);
+        }
+        return true;
 	}
 	
 	public Item getItemDropped(int par1, Random random, int par3)
@@ -224,6 +235,8 @@ public class Dryer extends Block{
 	{
 		super.onBlockAdded(world, x, y, z);
 	}
+
+
 	
 
 	

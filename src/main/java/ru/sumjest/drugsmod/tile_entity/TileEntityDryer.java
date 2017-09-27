@@ -143,7 +143,7 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 			this.dryerName = tag.getString("CustomName");
 		}
 	}
-
+	
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
@@ -196,7 +196,7 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 	{
 		boolean flag = this.dryerDryTime >0;
 		boolean flag1 = false;
-		
+	//	if(System.currentTimeMillis() % 1000 ==0)System.out.println(this.dryerCookTime);
 		if(this.dryerDryTime > 0)
 		{
 			this.dryerDryTime--;
@@ -225,7 +225,7 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 			if(this.isDrying() && this.canDrying())
 			{
 				this.dryerCookTime++;
-				if(this.dryerDryTime == 200)
+				if(this.dryerCookTime >= 200)
 				{
 					this.dryerCookTime = 0;
 					this.dryItem();
@@ -255,7 +255,6 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 		if(this.canDrying())
 		{
 			ItemStack itemstack = DryerRecipes.drying().getDryingResult(this.dryerItemStacks[0]);
-			
 			if(this.dryerItemStacks[2] == null)
 			{
 				this.dryerItemStacks[2] = itemstack.copy();
@@ -265,7 +264,8 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 			}
 		}
 		
-		this.dryerItemStacks[0].stackSize -= DryerRecipes.drying().getDryingCost(this.dryerItemStacks[0]).stackSize;
+		this.dryerItemStacks[0].stackSize-=DryerRecipes.drying().getDryingCost(this.dryerItemStacks[0]);
+				//DryerRecipes.drying().getDryingCost(this.dryerItemStacks[0]).stackSize;
 		
 		if(this.dryerItemStacks[0].stackSize <= 0)
 		{
@@ -282,6 +282,10 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 		{
 			ItemStack itemstack = DryerRecipes.drying().getDryingResult(this.dryerItemStacks[0]);
 			if(itemstack == null)
+			{
+				return false;
+			}
+			if(this.dryerItemStacks[0].stackSize < DryerRecipes.drying().getDryingCost(this.dryerItemStacks[0]))
 			{
 				return false;
 			}

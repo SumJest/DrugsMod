@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class DryerRecipes 
@@ -25,19 +26,19 @@ public class DryerRecipes
 		
 	}
 	
-	public void addRecipie(ItemStack item, ItemStack itemstack, float experience)
+	public void addRecipie(Item item, ItemStack itemstack, float experience, int count)
 	{
-		this.addLists(item, itemstack, experience);
+		this.addLists(item, itemstack, experience, count);
 	}
 	
-	public void addLists(ItemStack item, ItemStack itemstack, float experience)
+	public void addLists(Item item, ItemStack itemstack, float experience, int count)
 	{
-		this.putLists(item, itemstack, experience);
+		this.putLists(new ItemStack(item, count, 32767), itemstack, experience);
 	}
 	
-	public void putLists(ItemStack item, ItemStack itemstack, float experience)
+	public void putLists(ItemStack itemstack, ItemStack itemstack2, float experience)
 	{
-		this.dryingList.put(item, itemstack);
+		this.dryingList.put(itemstack, itemstack2);
 		this.experienceList.put(itemstack, Float.valueOf(experience));
 	}
 	
@@ -57,8 +58,7 @@ public class DryerRecipes
 		return (ItemStack) entry.getValue();
 		
 	}
-	
-	public ItemStack getDryingCost(ItemStack itemstack)
+	public int getDryingCost(ItemStack itemstack)
 	{
 		Iterator iterator = this.dryingList.entrySet().iterator();
 		Entry entry;
@@ -67,16 +67,17 @@ public class DryerRecipes
 		{
 			if(!iterator.hasNext())
 			{
-				return null;
+				return 0;
 			}
 			entry = (Entry) iterator.next();
-		}while(!itemstack.getItem().equals(((ItemStack)entry.getKey()).getItem()));
-		return (ItemStack) entry.getKey();
+		}while(!canBeDrying(itemstack, (ItemStack)entry.getKey()));
+		return ((ItemStack) entry.getKey()).stackSize;
+		
 	}
-	
+
 	private boolean canBeDrying(ItemStack itemstack, ItemStack itemstack2)
 	{
-		return itemstack2.getItem() == itemstack.getItem() && (itemstack2.getItemDamage() == 32767 || itemstack2.getItemDamage() == itemstack.getItemDamage()) && itemstack.stackSize >= itemstack2.stackSize;
+		return itemstack2.getItem() == itemstack.getItem() && (itemstack2.getItemDamage() == 32767 || itemstack2.getItemDamage() == itemstack.getItemDamage());
 	}
 	
 	public float giveExperience(ItemStack itemstack)

@@ -4,6 +4,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
@@ -15,8 +16,10 @@ import net.minecraft.item.ItemSeeds;
 import net.minecraft.item.ItemStack;
 import ru.sumjest.drugsmod.blocks.CannabisScrub;
 import ru.sumjest.drugsmod.blocks.Dryer;
+import ru.sumjest.drugsmod.handler.DryerRecipes;
 import ru.sumjest.drugsmod.items.Cannabis;
 import ru.sumjest.drugsmod.items.dry_Cannabis;
+import ru.sumjest.drugsmod.lib.Strings;
 
 @Mod (modid = "drugsmod", name="Drugs Mod", version = "0.1")
 public class DrugsMod 
@@ -31,7 +34,7 @@ public class DrugsMod
 	@SidedProxy(clientSide="ru.sumjest.drugsmod.ClientProxy", serverSide="ru.sumjest.drugsmod.ServerProxy")
 	public static ServerProxy proxy;
 	
-	@Instance("drugsmod")
+	@Instance(Strings.MODID)
 	public static DrugsMod modInstance;
 	
 	@EventHandler
@@ -44,13 +47,18 @@ public class DrugsMod
 		seeds_cannabis = new ItemSeeds(cannabis_scrub, Blocks.farmland).setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("cannabis_seed").setTextureName("drugsmod:seeds_cannabis");
 		dryerActive = new Dryer(true).setBlockName("DryerActive");
 		
-		
+		DryerRecipes.drying().addRecipie(this.cannabis,new ItemStack(this.dry_cannabis),1F,4);
 		registerBlocks();
 		registerItems();
 		registerRecipes();
 		registerOthers();	
 	}
 	
+	@EventHandler
+	public void load(FMLInitializationEvent event)
+	{
+		proxy.registerNetworkStuff();
+	}
 	public void registerBlocks()
 	{
 		GameRegistry.registerBlock(dryer, dryer.getUnlocalizedName());
