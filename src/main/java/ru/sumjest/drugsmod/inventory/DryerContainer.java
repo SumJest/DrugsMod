@@ -78,17 +78,14 @@ public class DryerContainer extends Container{
 	@SideOnly(Side.CLIENT)
 	public void updateProgressBar(int par1, int par2)
 	{
-		if(par1 ==0)
+		//System.out.println(par1+ " "+par2+" "+this.tileDryer.dryerDryTime);
+
+		switch(par1) 
 		{
-			this.tileDryer.dryerCookTime = par2;
-		}
-		if(par1 ==1)
-		{
-			this.tileDryer.dryerDryTime = par2;
-		}
-		if(par1 ==2)
-		{
-			this.tileDryer.currentDryTime = par2;
+			case 0:
+				this.tileDryer.dryerCookTime = par2;
+			case 1:
+				this.tileDryer.dryerDryTime = par2;
 		}
 	}
 	
@@ -96,21 +93,20 @@ public class DryerContainer extends Container{
 	public boolean canInteractWith(EntityPlayer player) {
 		return this.tileDryer.isUseableByPlayer(player);
 	}
-	
-	public ItemStack transferStackInSlot(EntityPlayer player, int par2){
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotid){
 		  ItemStack itemstack = null;
-		  Slot slot = (Slot) this.inventorySlots.get(par2);
-		  
+		  Slot slot = (Slot) this.inventorySlots.get(slotid);
 		  if(slot != null && slot.getHasStack()){
 		   ItemStack itemstack1 = slot.getStack();
 		   itemstack = itemstack1.copy();
 		   
-		   if(par2 == 2){
+		   if(slotid == 2){
 		    if(!this.mergeItemStack(itemstack1, 3, 39, true)){
 		     return null;
 		    }
 		    slot.onSlotChange(itemstack1, itemstack);
-		   }else if(par2 != 1 && par2 != 0){
+		   }else if(slotid != 1 && slotid != 0){
 		    if(DryerRecipes.drying().getDryingResult(itemstack1) != null){
 		     if(!this.mergeItemStack(itemstack1, 0, 1, false)){
 		      return null;
@@ -118,12 +114,12 @@ public class DryerContainer extends Container{
 		    }else if(TileEntityDryer.isItemFuel(itemstack1)){
 		     if(!this.mergeItemStack(itemstack1, 1, 2, false)){
 		      return null;
-		     }
-		    }else if(par2 >=3 && par2 < 30){
+		       }
+		    }else if(slotid >=3 && slotid < 30){
 		     if(!this.mergeItemStack(itemstack1, 30, 39, false)){
 		      return null;
 		     }
-		    }else if(par2 >= 30 && par2 < 39 && !this.mergeItemStack(itemstack1, 3, 30, false)){
+		    }else if(slotid >= 30 && slotid < 39 && !this.mergeItemStack(itemstack1, 3, 30, false)){
 		     return null;
 		    }
 		   }else if(!this.mergeItemStack(itemstack1, 3, 39, false)){

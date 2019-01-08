@@ -23,22 +23,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import ru.sumjest.drugsmod.DrugsMod;
 import ru.sumjest.drugsmod.handler.DrugsModGuiHandler;
+import ru.sumjest.drugsmod.handler.DrugsModGuiHandler.guiID;
 import ru.sumjest.drugsmod.tile_entity.TileEntityDryer;
 
 public class Dryer extends BlockContainer{
 
 	
 	@SideOnly(Side.CLIENT)
-	public IIcon top;
-	@SideOnly(Side.CLIENT)
-	public IIcon shell;
-	@SideOnly(Side.CLIENT)
-	public IIcon front;
-	@SideOnly(Side.CLIENT)
-	public IIcon backside;
-	@SideOnly(Side.CLIENT)
-	public IIcon bottom;
-	
+	public IIcon[] icon = new IIcon[6];
 	private static boolean isActive;
 	private final boolean isActive2;
 	private final Random random = new Random();
@@ -47,7 +39,7 @@ public class Dryer extends BlockContainer{
 	public Dryer(boolean isDrying) {
 		super(Material.iron);
 		this.setBlockName("Dryer");
-		this.setCreativeTab(CreativeTabs.tabDecorations);
+		if(!isDrying) this.setCreativeTab(CreativeTabs.tabDecorations);
 		this.setHardness(10F);
 		this.setResistance(10F);
 		this.setHarvestLevel("pickaxe", 0);
@@ -59,12 +51,12 @@ public class Dryer extends BlockContainer{
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister reg)
 	{
-		
-		top = reg.registerIcon(this.textureName + "_top");
-		front = isActive2 ? reg.registerIcon(this.textureName + "_activefront") : reg.registerIcon(this.textureName + "_front");;
-		shell=  reg.registerIcon(this.textureName + "_shell");
-		backside = reg.registerIcon(this.textureName + "_shell");
-		bottom = reg.registerIcon(this.textureName + "_shell");
+		icon[0] = reg.registerIcon(this.textureName + "_shell"); //bottom
+		icon[1] = isActive2 ? reg.registerIcon(this.textureName + "_top_active") : reg.registerIcon(this.textureName + "_top"); // top
+		icon[2] = reg.registerIcon(this.textureName + "_shell"); //backside
+		icon[3] = isActive2 ? reg.registerIcon(this.textureName + "_activefront") : reg.registerIcon(this.textureName + "_front");//front
+		icon[4] =  reg.registerIcon(this.textureName + "_shell"); //shell
+		icon[5] = reg.registerIcon(this.textureName + "_shell"); //shell
 	}
 	@Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack is)
@@ -183,29 +175,21 @@ public class Dryer extends BlockContainer{
             {
             	world.spawnParticle("smoke", (double)(f + f4), (double)f1, (double)(f2 + f3), 0.0D, 0.0D, 0.0D);
             	world.spawnParticle("flame", (double)(f + f4), (double)f1, (double)(f2 + f3), 0.0D, 0.0D, 0.0D);
-            }
-				
-				
-				
-			
+            }	
 		}
 	}
 	
 	@Override
     public IIcon getIcon(int side, int meta) {
-        if(meta==0)
-        {
-        	IIcon[] gIcons = {bottom, top, backside,front,shell,shell};
-        	return gIcons[side];
-        }
+        if(meta==0) return icon[side];
 		ForgeDirection block_dir = ForgeDirection.getOrientation(meta);
         ForgeDirection dir = meta != 0 ? ForgeDirection.getOrientation(side) : ForgeDirection.WEST;
-        if(dir == block_dir) return front;
-        else if(dir == block_dir.getOpposite()) return backside;
-        else if(dir == ForgeDirection.DOWN) return bottom;
-        else if(dir == ForgeDirection.UP) return top;
-        else return shell; 
-
+        if(dir == block_dir) return icon[3]; //front
+        else if(dir == block_dir.getOpposite()) return icon[2]; //backside
+        else if(dir == ForgeDirection.DOWN) return icon[0]; //bottom
+        else if(dir == ForgeDirection.UP) return icon[1]; //top
+        else return icon[4]; 
+		//bottom, top, backside,front,shell,shell
     }
 	@Override
 	public TileEntity createNewTileEntity(World world, int par2) {
@@ -215,7 +199,7 @@ public class Dryer extends BlockContainer{
 	{
         if (!world.isRemote)
         {
-            player.openGui(DrugsMod.modInstance, 0, world, x, y, z);
+            player.openGui(DrugsMod.modInstance, guiID.DRYER, world, x, y, z);
         }
         return true;
 	}
@@ -235,9 +219,4 @@ public class Dryer extends BlockContainer{
 	{
 		super.onBlockAdded(world, x, y, z);
 	}
-
-
-	
-
-	
 }

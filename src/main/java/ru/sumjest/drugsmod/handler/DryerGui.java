@@ -37,18 +37,19 @@ public class DryerGui extends GuiContainer
 		this.mc.getTextureManager().bindTexture(dryerGuiTextures);
 		int k = (this.width - this.xSize)/2;
 		int l = (this.height - this.ySize)/2;
+		//System.out.println(this.width +" "+ this.xSize+" "+this.height +" "+ this.ySize);
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 		int i1;
 		
 		if(this.tileDryer.isDrying())
 		{
 			i1 = this.tileDryer.getDryingTimeRemainingScaled(12);
+			//System.out.println(i1);
 			this.drawTexturedModalRect(k+56, l+50-i1, 176, 12-i1, 14, i1+1);
 		}
 		
-		i1 = this.tileDryer.getCookProgressScaled(24);
-		this.drawTexturedModalRect(k+79, l+34, 176, 14, i1+1, 16);
+		i1 = this.tileDryer.getCookProgressScaled(22);
+		//System.out.println(i1);
+		this.drawTexturedModalRect(k+79+4, l+34-4, 176, 14, 25, 23-i1);
 	}
-	
-
 }

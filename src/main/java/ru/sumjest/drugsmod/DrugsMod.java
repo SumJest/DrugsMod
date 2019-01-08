@@ -47,7 +47,7 @@ public class DrugsMod
 		seeds_cannabis = new ItemSeeds(cannabis_scrub, Blocks.farmland).setCreativeTab(CreativeTabs.tabMaterials).setUnlocalizedName("cannabis_seed").setTextureName("drugsmod:seeds_cannabis");
 		dryerActive = new Dryer(true).setBlockName("DryerActive");
 		
-		DryerRecipes.drying().addRecipie(this.cannabis,new ItemStack(this.dry_cannabis),1F,4);
+		DryerRecipes.drying().addRecipie(this.cannabis,new ItemStack(this.dry_cannabis),1F,1);
 		registerBlocks();
 		registerItems();
 		registerRecipes();

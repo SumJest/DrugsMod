@@ -137,7 +137,6 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 		this.dryerDryTime = tag.getShort("BurnTime");
 		this.dryerCookTime = tag.getShort("CookTime");
 		this.currentDryTime = getItemDryingTime(this.dryerItemStacks[1]);
-		
 		if(tag.hasKey("CustomName", 8))
 		{
 			this.dryerName = tag.getString("CustomName");
@@ -180,11 +179,14 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 	@SideOnly(Side.CLIENT)
 	public int getDryingTimeRemainingScaled(int par1)
 	{
+	//	System.out.println();
+		//System.out.println(this.currentDryTime);
 		if(this.currentDryTime ==0)
 		{
 			this.currentDryTime = 200;
 		}
-		return this.dryerDryTime * par1 / this.currentDryTime;
+		
+		return this.dryerDryTime * par1 / getItemDryingTime(this.dryerItemStacks[1]);
 	}
 	
 	public boolean isDrying()
@@ -200,14 +202,14 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 		if(this.dryerDryTime > 0)
 		{
 			this.dryerDryTime--;
+
 		}
-		
+
 		if(!this.worldObj.isRemote)
 		{
 			if(this.dryerDryTime == 0 && this.canDrying())
 			{
 				this.currentDryTime = this.dryerDryTime = getItemDryingTime(this.dryerItemStacks[1]);
-				
 				if(this.dryerDryTime > 0)
 				{
 					flag1 =true;
@@ -345,6 +347,7 @@ public class TileEntityDryer extends TileEntity implements ISidedInventory
 	
     public static boolean isItemFuel(ItemStack itemstack)
     {
+    	//System.out.println(getItemDryingTime(itemstack));
         return getItemDryingTime(itemstack) > 0;
     }
 	
