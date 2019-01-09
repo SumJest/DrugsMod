@@ -84,6 +84,5 @@ public class DrugsMod
 	{
 		DMHooks.mainRegistry();
 		proxy.registerTileEntities();
-
 	}
 }
