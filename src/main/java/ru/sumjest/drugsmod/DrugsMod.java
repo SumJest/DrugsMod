@@ -74,10 +74,10 @@ public class DrugsMod
 	public void registerRecipes()
 	{
 		GameRegistry.addRecipe(new ItemStack(DrugsMod.dryer, 1), new Object[]{
-				"I#I",
-				"I#I",
+				"###",
+				"I@I",
 				"III",
-				('I'), Items.iron_ingot, ('#'), Blocks.iron_bars
+				('I'), Items.iron_ingot, ('#'), Blocks.iron_bars,('@'),Blocks.furnace
 		});
 	}
 	public void registerOthers()
